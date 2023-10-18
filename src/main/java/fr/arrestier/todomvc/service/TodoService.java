@@ -37,7 +37,7 @@ public class TodoService {
     }
 
     public void deleteCompleted() {
-        todoRepository.deleteCompleted();
+        todoRepository.deleteByCompleted(true);
     }
 
     public Optional<Todo> findById(String id) {
