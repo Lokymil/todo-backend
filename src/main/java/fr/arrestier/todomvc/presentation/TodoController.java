@@ -53,14 +53,15 @@ public class TodoController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public Todo findById(@PathVariable("id") String id) throws NotFound {
-        return todoService.findById(id).orElseThrow(() -> new NotFound(id));
+    public TodoResponse findById(@PathVariable("id") String id) throws NotFound {
+        return todoService.findById(id).map(TodoResponse::fromTodo).orElseThrow(() -> new NotFound(id));
     }
 
     @PutMapping("/{id}")
     @ResponseBody
-    public Todo updateById(@PathVariable("id") String id, @Valid @RequestBody TodoUpdateRequest updatedTodo) throws AlreadyExisting, NotFound, InvalidData {
-        return todoService.updateById(id, updatedTodo.title, updatedTodo.completed, updatedTodo.order);
+    public TodoResponse updateById(@PathVariable("id") String id, @Valid @RequestBody TodoUpdateRequest todoToUpdate) throws AlreadyExisting, NotFound, InvalidData {
+        var updatedTodo = todoService.updateById(id, todoToUpdate.title, todoToUpdate.completed, todoToUpdate.order);
+        return TodoResponse.fromTodo(updatedTodo);
     }
 
     @DeleteMapping("/{id}")
