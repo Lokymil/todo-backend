@@ -1,25 +1,22 @@
 package fr.arrestier.todomvc.domain;
 
-import fr.arrestier.todomvc.infrastructure.TodoRepository;
 import fr.arrestier.todomvc.domain.exception.AlreadyExisting;
 import fr.arrestier.todomvc.domain.exception.NotFound;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class TodoService {
     private final TodoRepository todoRepository;
+
     public TodoService(TodoRepository todoRepository) {
         this.todoRepository = todoRepository;
     }
 
     public List<Todo> getAll() {
-        var todos = todoRepository.findAll();
-        return StreamSupport.stream(todos.spliterator(), false).collect(Collectors.toList());
+        return todoRepository.findAll();
     }
 
     public Todo create(String title) throws AlreadyExisting {
