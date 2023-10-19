@@ -1,8 +1,8 @@
-package fr.arrestier.todomvc.service;
+package fr.arrestier.todomvc.domain;
 
-import fr.arrestier.todomvc.repository.TodoRepository;
-import fr.arrestier.todomvc.service.exception.AlreadyExisting;
-import fr.arrestier.todomvc.service.exception.NotFound;
+import fr.arrestier.todomvc.infrastructure.TodoRepository;
+import fr.arrestier.todomvc.domain.exception.AlreadyExisting;
+import fr.arrestier.todomvc.domain.exception.NotFound;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public class TodoService {
         return StreamSupport.stream(todos.spliterator(), false).collect(Collectors.toList());
     }
 
-    public Todo create(String title) {
+    public Todo create(String title) throws AlreadyExisting {
         Todo todoToCreate = new Todo(title);;
 
         try {
@@ -44,21 +44,24 @@ public class TodoService {
         return todoRepository.findById(id);
     }
 
-    public Todo updateById(String id, String title, boolean completed, int order) {
+    public Todo updateById(String id, String title, boolean completed, int order) throws AlreadyExisting, NotFound {
+        if(todoRepository.findByTitle(title).isPresent()) {
+            throw new AlreadyExisting(title);
+        }
+
         return todoRepository.findById(id)
                 .map(todo -> {
                     todo.title = title;
                     todo.completed = completed;
                     todo.order = order;
-                    try {
-                        return todoRepository.save(todo);
-                    } catch(RuntimeException e) {
-                        throw new AlreadyExisting(title);
-                    }
+                    return todoRepository.save(todo);
                 }).orElseThrow(() -> new NotFound(id));
     }
 
-    public void deleteById(String id) {
+    public void deleteById(String id) throws NotFound {
+        if(todoRepository.findById(id).isEmpty()) {
+            throw new NotFound(id);
+        }
         todoRepository.deleteById(id);
     }
 }

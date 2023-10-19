@@ -1,6 +1,6 @@
-package fr.arrestier.todomvc.service.exception;
+package fr.arrestier.todomvc.domain.exception;
 
-public class NotFound extends RuntimeException {
+public class NotFound extends Exception {
     public NotFound(String id) {
         super("Todo with id " + id + " does not exist");
     }

@@ -1,8 +1,9 @@
-package fr.arrestier.todomvc.controller;
+package fr.arrestier.todomvc.presentation;
 
-import fr.arrestier.todomvc.service.Todo;
-import fr.arrestier.todomvc.service.TodoService;
-import fr.arrestier.todomvc.service.exception.NotFound;
+import fr.arrestier.todomvc.domain.Todo;
+import fr.arrestier.todomvc.domain.TodoService;
+import fr.arrestier.todomvc.domain.exception.AlreadyExisting;
+import fr.arrestier.todomvc.domain.exception.NotFound;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class TodoController {
 
     @PostMapping
     @ResponseBody
-    public ResponseEntity<TodoResponse> createTodo(@Valid @RequestBody TodoCreationRequest todoToCreate) {
+    public ResponseEntity<TodoResponse> createTodo(@Valid @RequestBody TodoCreationRequest todoToCreate) throws AlreadyExisting {
         Todo createdTodo = todoService.create(todoToCreate.title);
 
         return ResponseEntity
@@ -51,24 +52,20 @@ public class TodoController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public Todo findById(@PathVariable("id") String id) {
+    public Todo findById(@PathVariable("id") String id) throws NotFound {
         return todoService.findById(id).orElseThrow(() -> new NotFound(id));
     }
 
     @PutMapping("/{id}")
     @ResponseBody
-    public Todo updateById(@PathVariable("id") String id, @Valid @RequestBody TodoUpdateRequest updatedTodo) {
+    public Todo updateById(@PathVariable("id") String id, @Valid @RequestBody TodoUpdateRequest updatedTodo) throws AlreadyExisting, NotFound {
         return todoService.updateById(id, updatedTodo.title, updatedTodo.completed, updatedTodo.order);
 
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable("id") String id) {
-        todoService.findById(id).ifPresentOrElse(
-                todo -> todoService.deleteById(todo.getId()),
-                () -> {
-                    throw new NotFound(id);
-                });
+    public void deleteById(@PathVariable("id") String id) throws NotFound {
+        todoService.deleteById(id);
     }
 }

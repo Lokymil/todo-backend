@@ -1,4 +1,4 @@
-package fr.arrestier.todomvc.controller;
+package fr.arrestier.todomvc.presentation;
 
 import jakarta.validation.constraints.NotBlank;
 

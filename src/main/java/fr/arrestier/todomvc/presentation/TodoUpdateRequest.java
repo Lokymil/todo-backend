@@ -1,8 +1,7 @@
-package fr.arrestier.todomvc.controller;
+package fr.arrestier.todomvc.presentation;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 public class TodoUpdateRequest {
     @NotBlank(message = "Title is mandatory")

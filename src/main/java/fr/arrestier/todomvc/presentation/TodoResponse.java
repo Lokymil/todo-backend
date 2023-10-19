@@ -1,6 +1,6 @@
-package fr.arrestier.todomvc.controller;
+package fr.arrestier.todomvc.presentation;
 
-import fr.arrestier.todomvc.service.Todo;
+import fr.arrestier.todomvc.domain.Todo;
 
 public record TodoResponse(String id, String title, boolean completed, int ordre, String url) {
     public static TodoResponse fromTodo(Todo todo) {

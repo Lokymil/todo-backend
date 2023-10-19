@@ -1,7 +1,6 @@
-package fr.arrestier.todomvc.service;
+package fr.arrestier.todomvc.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 
 @Entity
 @Table(name = "todos")

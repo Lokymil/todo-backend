@@ -1,7 +1,7 @@
-package fr.arrestier.todomvc.controller;
+package fr.arrestier.todomvc.presentation;
 
-import fr.arrestier.todomvc.service.exception.AlreadyExisting;
-import fr.arrestier.todomvc.service.exception.NotFound;
+import fr.arrestier.todomvc.domain.exception.AlreadyExisting;
+import fr.arrestier.todomvc.domain.exception.NotFound;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +13,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = { AlreadyExisting.class })
-    protected ResponseEntity<Object> handleConflict(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<Object> handleConflict(Exception ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 
     @ExceptionHandler(value = { NotFound.class })
-    protected ResponseEntity<Object> handleNotFound(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<Object> handleNotFound(Exception ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 }
