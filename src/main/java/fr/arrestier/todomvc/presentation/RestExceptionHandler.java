@@ -1,6 +1,7 @@
 package fr.arrestier.todomvc.presentation;
 
 import fr.arrestier.todomvc.domain.exception.AlreadyExisting;
+import fr.arrestier.todomvc.domain.exception.InvalidData;
 import fr.arrestier.todomvc.domain.exception.NotFound;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,5 +21,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = { NotFound.class })
     protected ResponseEntity<Object> handleNotFound(Exception ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(value = { InvalidData.class })
+    protected ResponseEntity<Object> handleBadRequest(Exception ex, WebRequest request) {
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 }

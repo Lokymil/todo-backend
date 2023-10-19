@@ -3,8 +3,8 @@ package fr.arrestier.todomvc.presentation;
 import fr.arrestier.todomvc.domain.Todo;
 import fr.arrestier.todomvc.domain.TodoService;
 import fr.arrestier.todomvc.domain.exception.AlreadyExisting;
+import fr.arrestier.todomvc.domain.exception.InvalidData;
 import fr.arrestier.todomvc.domain.exception.NotFound;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +30,8 @@ public class TodoController {
 
     @PostMapping
     @ResponseBody
-    public ResponseEntity<TodoResponse> createTodo(@Valid @RequestBody TodoCreationRequest todoToCreate) throws AlreadyExisting {
-        Todo createdTodo = todoService.create(todoToCreate.title);
+    public ResponseEntity<TodoResponse> createTodo(@RequestBody TodoCreationRequest todoToCreate) throws AlreadyExisting {
+        Todo createdTodo = todoService.create(todoToCreate.title());
 
         return ResponseEntity
                 .created(URI.create("http://localhost:8080/todos/"+createdTodo.getId()))
@@ -58,9 +58,8 @@ public class TodoController {
 
     @PutMapping("/{id}")
     @ResponseBody
-    public Todo updateById(@PathVariable("id") String id, @Valid @RequestBody TodoUpdateRequest updatedTodo) throws AlreadyExisting, NotFound {
-        return todoService.updateById(id, updatedTodo.title, updatedTodo.completed, updatedTodo.order);
-
+    public Todo updateById(@PathVariable("id") String id, @RequestBody TodoUpdateRequest updatedTodo) throws AlreadyExisting, NotFound, InvalidData {
+        return todoService.updateById(id, updatedTodo.title(), updatedTodo.completed(), updatedTodo.order());
     }
 
     @DeleteMapping("/{id}")

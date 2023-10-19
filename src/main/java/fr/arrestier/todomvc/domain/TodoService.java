@@ -1,6 +1,7 @@
 package fr.arrestier.todomvc.domain;
 
 import fr.arrestier.todomvc.domain.exception.AlreadyExisting;
+import fr.arrestier.todomvc.domain.exception.InvalidData;
 import fr.arrestier.todomvc.domain.exception.NotFound;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,7 @@ public class TodoService {
         try {
             return todoRepository.save(todoToCreate);
         } catch (RuntimeException e) {
-            throw new AlreadyExisting(todoToCreate.title);
+            throw new AlreadyExisting(todoToCreate.getTitle());
         }
     }
 
@@ -41,18 +42,21 @@ public class TodoService {
         return todoRepository.findById(id);
     }
 
-    public Todo updateById(String id, String title, boolean completed, int order) throws AlreadyExisting, NotFound {
+    public Todo updateById(String id, String title, boolean completed, int order) throws AlreadyExisting, NotFound, InvalidData {
         if(todoRepository.findByTitle(title).isPresent()) {
             throw new AlreadyExisting(title);
         }
 
-        return todoRepository.findById(id)
-                .map(todo -> {
-                    todo.title = title;
-                    todo.completed = completed;
-                    todo.order = order;
-                    return todoRepository.save(todo);
-                }).orElseThrow(() -> new NotFound(id));
+        var todo = todoRepository.findById(id);
+        if (todo.isEmpty()) {
+            throw new NotFound(id);
+        }
+
+        var foundTodo = todo.get();
+        foundTodo.setTitle(title);
+        foundTodo.setCompleted(completed);
+        foundTodo.setOrder(order);
+        return todoRepository.save(foundTodo);
     }
 
     public void deleteById(String id) throws NotFound {

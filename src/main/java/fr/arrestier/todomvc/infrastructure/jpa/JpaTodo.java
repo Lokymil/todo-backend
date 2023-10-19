@@ -26,9 +26,9 @@ class JpaTodo {
 
     public JpaTodo(Todo todo) {
         this.id = todo.getId();
-        this.title = todo.title;
-        this.completed = todo.completed;
-        this.order = todo.order;
+        this.title = todo.getTitle();
+        this.completed = todo.isCompleted();
+        this.order = todo.getOrder();
     }
 
     public Todo asTodo() {
