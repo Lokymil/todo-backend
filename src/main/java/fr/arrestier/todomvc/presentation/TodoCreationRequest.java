@@ -1,4 +1,8 @@
 package fr.arrestier.todomvc.presentation;
 
-public record TodoCreationRequest(String title) {
+import jakarta.validation.constraints.NotNull;
+
+public class TodoCreationRequest {
+    @NotNull
+    public String title;
 }
