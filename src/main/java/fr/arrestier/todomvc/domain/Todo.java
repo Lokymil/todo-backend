@@ -1,7 +1,6 @@
 package fr.arrestier.todomvc.domain;
 
 import fr.arrestier.todomvc.domain.exception.InvalidData;
-import org.springframework.util.StringUtils;
 
 public class Todo {
     private String id;

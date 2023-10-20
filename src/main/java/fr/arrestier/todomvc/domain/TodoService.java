@@ -20,8 +20,11 @@ public class TodoService {
         return todoRepository.findAll();
     }
 
-    public Todo create(String title) throws AlreadyExisting {
-        Todo todoToCreate = new Todo(title);;
+    public Todo create(String title) throws AlreadyExisting, InvalidData {
+        if (title.isEmpty()) {
+            throw new InvalidData("Title cannot be empty");
+        }
+        Todo todoToCreate = new Todo(title);
 
         try {
             return todoRepository.save(todoToCreate);

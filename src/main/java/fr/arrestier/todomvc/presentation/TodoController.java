@@ -37,7 +37,7 @@ public class TodoController {
 
     @PostMapping
     @ResponseBody
-    public ResponseEntity<TodoResponse> createTodo(@Valid @RequestBody TodoCreationRequest todoToCreate) throws AlreadyExisting {
+    public ResponseEntity<TodoResponse> createTodo(@Valid @RequestBody TodoCreationRequest todoToCreate) throws AlreadyExisting, InvalidData {
         Todo createdTodo = todoService.create(todoToCreate.title);
 
         TodoResponse response = getTodoAsResponse(createdTodo);
